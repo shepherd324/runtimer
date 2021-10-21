@@ -1,28 +1,20 @@
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react'
 import logo from './logo.svg';
 import './App.css';
 import Runner from './Runner';
 import Race from './Race';
 import RaceForm from './RaceForm';
-import Test from './Test'
-import RaceList from './RaceList'
 import { nanoid } from "nanoid";
-import { store } from './Store';
-import {
-  Link
-} from "react-router-dom";
 
-function App(props) {
 
-  const globalState = useContext(store);
-  console.log(globalState); // this will return { color: red }
+function RaceList(props) {
 
   const [races, setRaces] = useState(props.races)
   const [runners, setRunners] = useState(props.runners)
   const [laps, setLaps] = useState(props.laps)
 
   function addRace(race) {
-    const newRace = { id: 'race-' + nanoid(), name: race.name, date: race.start }
+    const newRace = { id: 'race-' + nanoid(), name: race.name, date: race.date }
     setRaces([...races, newRace]);
   }
 
@@ -32,8 +24,8 @@ function App(props) {
   }
 
   function addRunner(runner) {
-    const newRunner = { id: 'runner-' + nanoid(), name: runner.name }
-    setRaces([...runners, newRunner]);
+    runner.id = 'runner-' + nanoid()
+    setRunners([...runners, runner])
   }
 
   function deleteRunner(id) {
@@ -53,24 +45,29 @@ function App(props) {
   }
 
   const racesList = races.map(race => (
-    <Link to={`/race/${race.id}`}>{race.name}</Link>
+    <Race
+      id={race.id}
+      key={race.id}
+      name={race.name}
+      date={race.date}
+      runners={props.runners}      
+    />
   ))
 
 
   return (
     <div className="App">
       <header className="App-header">
-        Race Timer
+        Races
       </header>
-      
       <div>
         {racesList}
       </div>
       <div class="race-form">
-        <RaceForm name="" addRace={addRace} />
+        <RaceForm name="" date="" addRace={addRace} />
       </div>
     </div>
   );
 }
 
-export default App;
+export default RaceList;
