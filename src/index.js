@@ -3,8 +3,10 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import Race from './Race'
+import Runners from './Runners'
 import reportWebVitals from './reportWebVitals';
 import Test from './Test'
+import store from 'store'
 import {
   BrowserRouter as Router,
   Switch,
@@ -12,54 +14,47 @@ import {
   Link
 } from "react-router-dom";
 
-import { StateProvider } from './Store';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-const Races = [
-  {
-    id: 'race-dummy', name: "Dummy Race", start: 0
-  }
-]
-
-const Runners = [
-  {
-    id: 'runner-3', name: "Anya Schafer"
-  },
-  {
-    id: 'runner-2', name: "Calla Schafer"
-  },
-  {
-    id: 'runner-1', name: "Bryn Schafer"
-  }
-]
-
-const Laps = [
-  {
-    id: 0,
-    raceId: 0,
-    runnerId: 0,
-    lapNum: 1,
-    seconds: 0
-  }
-]
+let initialState = store.get('initialState')
+if (!initialState) {
+  initialState = {
+    races: [
+      {
+        id: 'race-dummy', name: "Dummy Race", start: 0, end: 0, laps: []
+      }
+    ],
+    runners: [
+      {
+        id: 'runner-3', name: "Anya Schafer"
+      }
+    ]
+  };
+  store.set('initialState', initialState)
+}
 
 ReactDOM.render(
-  <StateProvider >
   <React.StrictMode>
     <Router>
       {/* <div><Link to="/">Races</Link></div>
       <div><Link to="/test">Test</Link></div> */}
       <Switch>
         <Route exact path="/">
-          <App races={Races} runners={Runners} laps={Laps}  />
+            <App fullState={initialState} />
         </Route>
-        <Route path="/race/:id" children={<Race races={Races} runners={Runners} laps={Laps} />} />
+        <Route path="/runners">
+          <Runners runners={initialState.runners} />
+        </Route>
+        {/* <Route path="/race/:id" children={<Race fullState={initialState} />} /> */}
+        <Route path="/race/:id">
+          <Race />
+        </Route>
         <Route exact path="/test">
           <Test />
         </Route>
       </Switch>
     </Router>
-    </React.StrictMode>
-  </StateProvider >,
+    </React.StrictMode>,
   document.getElementById('root')
 );
 

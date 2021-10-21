@@ -1,23 +1,32 @@
-//hooks and context store pattern from https://blog.logrocket.com/use-hooks-and-context-not-react-and-redux/#whyyouneed
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import rootReducer from './reducers/RootReducer';
 
-import React, { createContext, useReducer } from 'react';
 
-const initialState = {};
-const store = createContext(initialState);
-const { Provider } = store;
-
-const StateProvider = ({ children }) => {
-    const [state, dispatch] = useReducer((state, action) => {
-        switch (action.type) {
-            case 'action description':
-                const newState = 2// do something with the action
-        return newState;
-            default:
-                throw new Error();
-        };
-    }, initialState);
-
-    return <Provider value={{ state, dispatch }}>{children}</Provider>;
-};
-
-export { store, StateProvider }
+export default function configureStore(initialState) {
+    const initialState = {
+        races: [
+            {
+                id: 'race-dummy', name: "Dummy Race", start: 0
+            }
+        ],
+        runners: [
+            {
+                id: 'runner-3', name: "Anya Schafer"
+            },
+            {
+                id: 'runner-2', name: "Calla Schafer"
+            },
+            {
+                id: 'runner-1', name: "Bryn Schafer"
+            }
+        ],
+        laps: []
+    };
+    return createStore(
+        rootReducer,
+        initialState,
+        applyMiddleware(thunk)
+        //applyMiddleware(thunk, dataService)
+    );
+}
