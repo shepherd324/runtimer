@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import {  Container, Button, ListGroup, Alert } from 'react-bootstrap';
+import Glyphicon from '@strongdm/glyphicon'
+import { Container, Button, ListGroup, Alert } from 'react-bootstrap';
 import AppNav from './AppNav'
 import './App.css';
 import RaceForm from './RaceForm';
@@ -34,7 +35,7 @@ export function App(props) {
   }
 
   const racesList = races.map(race => (
-    <ListGroup.Item><Link key={race.id} className="link" to={`/race/${race.id}`}>{race.name}</Link> <Button size="sm" variant="danger" onClick={ () => deleteRace(race.id) }>Delete</Button></ListGroup.Item>
+    <ListGroup.Item className="d-flex justify-content-between align-items-start"><Link key={race.id} className="link" to={`/race/${race.id}`}>{race.name}</Link> <Button size="sm" variant="danger" onClick={() => deleteRace(race.id)}><Glyphicon glyph='remove' /></Button></ListGroup.Item>
   ))
 
   return (

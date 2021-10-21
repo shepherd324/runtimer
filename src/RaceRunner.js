@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Navbar, Container, ListGroup, ListGroupItem, Alert, Button } from 'react-bootstrap';
+import Glyphicon from '@strongdm/glyphicon'
 import { nanoid } from "nanoid";
 import { getRaceLaps } from './DataStore'
 
@@ -25,7 +26,7 @@ function RaceRunner(props) {
     props.cancelLap()
   }
   
-  const runnerLaps = race.laps.map(lap => (
+  const runnerLaps = race.laps.filter(x => x.runnerId === runner.id).map(lap => (
     <ListGroup.Item key={lap.id}><span>Lap {lap.lapNum}: {lap.time / 10} </span></ListGroup.Item>
   ))
 
@@ -36,7 +37,7 @@ function RaceRunner(props) {
   
   let lapButton = ""
   if (race.start > 0 && race.end === 0) {
-    lapButton = <ListGroup.Item><Button onClick={recordLap} size="sm">Lap</Button></ListGroup.Item>
+    lapButton = <ListGroup.Item><Button onClick={recordLap} size="sm"><Glyphicon glyph='plus' /> Lap</Button></ListGroup.Item>
   }
 
   return (

@@ -37,6 +37,15 @@ function Race(props) {
     const newRace = { ...race }
     newRace.start = new Date().getTime()
     setRace(newRace)
+    startCounter()
+  }
+
+  function startCounter() {
+    if (race.start > 0) {
+      counter = new Date().getTime()-counter
+    } else {
+      counter = 0
+    }
     intervalId.current = setInterval(() => {
       //need a counter and a state variable because setState doesn't immediately update so it's unreliable
       counter++
@@ -50,9 +59,9 @@ function Race(props) {
       const newRace = { ...race }
       newRace.end = newRace.start + (timeElapsed * 10)
       setRace(newRace)
-    }
-    
+    }    
   }
+
 
   function recordLap(newLap) {
     newLap.time = timeElapsed
@@ -86,7 +95,7 @@ function Race(props) {
       <RaceRunner
         race={race}
         runner={runner}
-        laps={race.laps}
+        laps={race.laps.filter(x => x.runnerId == runner.id)}
         key={runner.id}
         elapsedTime={timeElapsed}
         recordLap={recordLap}

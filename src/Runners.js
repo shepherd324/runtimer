@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { Navbar, Container, Nav, NavDropdown, ListGroup, ListGroupItem, Alert, Button } from 'react-bootstrap';
+import { Badge, Container, ListGroup, Alert, Button } from 'react-bootstrap';
+import Glyphicon from '@strongdm/glyphicon'
 import AppNav from './AppNav'
 import { nanoid } from 'nanoid';
 import RunnerForm from './RunnerForm'
@@ -19,7 +20,7 @@ function Runners(props) {
   }, [runners])
 
   const runnerList = runners.map(runner => (
-    <ListGroup.Item key={runner.id}>{runner.name} <Button size="sm" variant="danger" onClick={() => deleteRunner(runner.id)}>Delete</Button></ListGroup.Item>
+    <ListGroup.Item className="d-flex justify-content-between align-items-start" key={runner.id}>{runner.name} <Button size="sm" variant="danger" onClick={() => deleteRunner(runner.id)}><Glyphicon glyph='remove' /></Button></ListGroup.Item>
   ))
 
   function addRunner(runner) {

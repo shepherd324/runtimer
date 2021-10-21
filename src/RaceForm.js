@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Form, FloatingLabel, Button, InputGroup } from 'react-bootstrap';
+import Glyphicon from '@strongdm/glyphicon'
 
 
 function RaceForm(props) {
@@ -20,7 +21,7 @@ function RaceForm(props) {
       <Form.Group>
         <InputGroup className="mb-3" size="sm">
           <Form.Control type="text" placeholder="Race Name" className="text-muted" size="sm" ref={raceName} />
-          <Button type="submit" variant="success">Add Race</Button>
+          <Button type="submit" variant="success"><Glyphicon glyph='plus' /> Add Race</Button>
         </InputGroup>
           
         </Form.Group>
