@@ -87,7 +87,7 @@ function Race(props) {
     let lapTime = timeElapsed
     console.log("time elapsed is " + timeElapsed)
     if (myLaps.length > 0) {
-      let prevLapTimes = race.laps.reduce((prev, cur) => {
+      let prevLapTimes = myLaps.reduce((prev, cur) => {
         return prev + cur.time
       }, 0)
       lapTime = timeElapsed - prevLapTimes
