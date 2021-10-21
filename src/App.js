@@ -25,7 +25,7 @@ export function App(props) {
   }, [races])
 
   function addRace(race) {
-    const newRace = { id: 'race-' + nanoid(), name: race.name, date: race.start, laps: [], start: 0, end: 0 }
+    const newRace = { id: 'race-' + nanoid(), name: race.name, laps: [], start: 0, end: 0 }
     setRaces([...races, newRace])
   }
 
@@ -35,7 +35,7 @@ export function App(props) {
   }
 
   const racesList = races.map(race => (
-    <ListGroup.Item className="d-flex justify-content-between align-items-start"><Link key={race.id} className="link" to={`/race/${race.id}`}>{race.name}</Link> <Button size="sm" variant="danger" onClick={() => deleteRace(race.id)}><Glyphicon glyph='remove' /></Button></ListGroup.Item>
+    <ListGroup.Item key={race.id} className="d-flex justify-content-between align-items-start"><Link key={race.id} className="link" to={`/race/${race.id}`}>{race.name}</Link> <Button size="sm" variant="danger" onClick={() => deleteRace(race.id)}><Glyphicon glyph='remove' /></Button></ListGroup.Item>
   ))
 
   return (

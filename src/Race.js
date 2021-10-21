@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect, useLayoutEffect } from 'react'
-import { Navbar, Container, ListGroup, ListGroupItem, Alert, Button } from 'react-bootstrap';
+import React, { useState, useRef, useEffect, useCallback } from 'react'
+import { Navbar, Container, ListGroup, Table, Alert, Button } from 'react-bootstrap';
 import './Race.css';
 import RaceRunner from './RaceRunner';
 import AppNav from './AppNav';
@@ -16,6 +16,36 @@ function Race(props) {
   const [runners, setRunners] = useState([])
   const [race, setRace] = useState({})
   const [timeElapsed, setTimeElapsed] = useState(0)
+  const _isMounted = useRef(true)
+
+
+  const startCounter = useCallback(() => {
+    if (!_isMounted) return;
+    if (race.end !== 0) return;
+    if (intervalId && intervalId.current !== null) return;
+    console.log('startCounter fired')
+
+    if (race.start > 0) {
+      counter.current = (new Date().getTime() - race.start) / 100
+    } else {
+      counter.current = 0
+    }
+    clearInterval(intervalId.current)
+    intervalId.current = setInterval(() => {
+      if (_isMounted) {
+        //need a counter and a state variable because setState doesn't immediately update so it's unreliable
+        counter.current++
+        setTimeElapsed(counter.current)
+      }
+
+    }, 100)
+  })
+
+  useEffect(() => {
+    return () => {
+      _isMounted.current = false
+    }
+  }, [])
 
   useEffect(() => {
     setRunners(getRunners().sort(x => x.name))
@@ -24,40 +54,28 @@ function Race(props) {
 
   useEffect(() => {
     persistRace(race)
-  }, [race])
+    startCounter()
+  }, [race, startCounter])
 
-  let counter = 0
+
+  let counter = useRef(0)
   let intervalId = useRef(null)
-
-  function addTime() {
-    setTimeElapsed(timeElapsed + 1)
-  }
 
   function startRace() {
     const newRace = { ...race }
     newRace.start = new Date().getTime()
     setRace(newRace)
-    startCounter()
+    startCounter()    
   }
 
-  function startCounter() {
-    if (race.start > 0) {
-      counter = new Date().getTime()-counter
-    } else {
-      counter = 0
-    }
-    intervalId.current = setInterval(() => {
-      //need a counter and a state variable because setState doesn't immediately update so it's unreliable
-      counter++
-      setTimeElapsed(counter)
-    }, 100)
-  }
+  
 
   function stopRace() {
+    const stopTime = new Date().getTime()
     if (window.confirm('Are you sure you want to stop the race - this action cannot be undone?')) {
       clearInterval(intervalId.current)
       const newRace = { ...race }
-      newRace.end = newRace.start + (timeElapsed * 10)
+      newRace.end = stopTime
       setRace(newRace)
     }    
   }
@@ -70,9 +88,9 @@ function Race(props) {
     setRace(newRace)
   }
 
-  function cancelLap() {
+  function cancelLap(lapId) {
     let newRace = {...race}
-    newRace.laps = race.laps.slice(0, race.laps.length - 1)
+    newRace.laps = race.laps.filter(x => x.id !== lapId)
     setRace(newRace)
   }
 
@@ -85,25 +103,24 @@ function Race(props) {
   } else if (race && race.start > 0 && race.end === 0) {
     raceHeader =
       <div>
-        <Button onClick={stopRace}>Stop Race</Button> <span>Elapsed Time: {timeElapsed / 10}</span>
+        <Button onClick={stopRace}>Stop Race</Button> <span>Elapsed Time: {(timeElapsed / 10).toFixed(2)}</span>
       </div>
   }
   
 
   const runnerList = runners.map(runner => (
-    <ListGroup.Item>
       <RaceRunner
         race={race}
         runner={runner}
-        laps={race.laps.filter(x => x.runnerId == runner.id)}
+        laps={race.laps.filter(x => x.runnerId === runner.id)}
         key={runner.id}
         elapsedTime={timeElapsed}
         recordLap={recordLap}
         cancelLap={cancelLap}
       />
-    </ListGroup.Item>
   ))
 
+    
 
   return (
     <Container>
@@ -116,9 +133,11 @@ function Race(props) {
           <div className="raceHeader">
             {raceHeader}
           </div>
-          <ListGroup>
-            {runnerList}
-          </ListGroup>
+          <Table striped bordered hover>
+            <tbody>
+              {runnerList}
+            </tbody>
+          </Table>
         </div>
       </Container>
     </Container>
