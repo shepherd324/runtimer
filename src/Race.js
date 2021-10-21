@@ -21,7 +21,7 @@ function Race(props) {
 
   const startCounter = useCallback(() => {
     if (!_isMounted) return;
-    if (race.end !== 0) return;
+    if (race.start === 0 || race.end !== 0) return;
     if (intervalId && intervalId.current !== null) return;
     console.log('startCounter fired')
 
@@ -82,7 +82,19 @@ function Race(props) {
 
 
   function recordLap(newLap) {
-    newLap.time = timeElapsed
+    let myLaps = race.laps.filter(x => x.runnerId === newLap.runnerId)
+    console.log(myLaps)
+    let lapTime = timeElapsed
+    console.log("time elapsed is " + timeElapsed)
+    if (myLaps.length > 0) {
+      let prevLapTimes = race.laps.reduce((prev, cur) => {
+        return prev + cur.time
+      }, 0)
+      lapTime = timeElapsed - prevLapTimes
+      console.log("last lap was " + prevLapTimes + " this lap is " + lapTime)
+    }
+    
+    newLap.time = lapTime
     const newRace = { ...race }
     newRace.laps.push(newLap)
     setRace(newRace)
