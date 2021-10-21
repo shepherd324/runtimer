@@ -1,4 +1,6 @@
 
+import { Switch, Route, Link } from 'react-router-dom';
+
 import { Navbar, Container, Nav } from 'react-bootstrap';
 
 export function AppNav() {
@@ -9,8 +11,8 @@ export function AppNav() {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
-                        <Nav.Link href="/">Races</Nav.Link>
-                        <Nav.Link href="/runners">Runners</Nav.Link>
+                        <Nav.Link as={Link} to="/">Races</Nav.Link>
+                        <Nav.Link as={Link} to="/runners">Runners</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>
