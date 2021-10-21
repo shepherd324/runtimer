@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Navbar, Container, Button, NavDropdown, ListGroup, ListGroupItem, Alert } from 'react-bootstrap';
+import {  Container, Button, ListGroup, Alert } from 'react-bootstrap';
 import AppNav from './AppNav'
 import './App.css';
 import RaceForm from './RaceForm';
-import store from 'store'
 import { nanoid } from "nanoid";
 import {
   Link
